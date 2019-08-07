@@ -53,6 +53,7 @@
   <h1>網路留言版</h1>
   <p>資料筆數：<?php echo $total_records ?>
   </p>
+  <p><a href="post.php">去留言</a></p>
   <?php while ($row_RecBoard=$result->fetch_assoc()) { ?>
   <table>
     <tr>
