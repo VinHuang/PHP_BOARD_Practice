@@ -6,7 +6,7 @@ if (!isset($_SESSION["loginMember"]) || ($_SESSION["loginMember"] == "")) {
     header("Location: http://localhost/board/index.php");
 }
 //執行登出動作
-if (!isset($_GET["logout"]) || ($_GET["logout"] == "true")) {
+if (isset($_GET["logout"]) && ($_GET["logout"] == "true")) {
     unset($_SESSION["loginMember"]);
     header("Location: http://localhost/board/index.php");
 }
@@ -21,9 +21,9 @@ if (isset($_GET['page'])) {
 //本頁開始紀錄筆數 ＝ （頁數 -1）* 每頁記錄筆數
 $startRow_records = ($num_pages - 1) * $pageRow_records;
 //未加限制顯示筆數的ＳＱＬ敘述句
-$query_RecBoard = "SELECT * FROM board ORDER BY boardtime DESC";
+$query_RecBoard = "SELECT * FROM board ORDER BY boardid DESC";
 //加上限制顯示筆數的ＳＱＬ敘述句。由本頁開始紀錄筆數開始，每頁顯示預設筆數。
-$query_limit_RecBoard = $query_RecBoard." LIMIT ($startRow_records), ($pageRow_records)";
+$query_limit_RecBoard = $query_RecBoard." LIMIT {$startRow_records}, {$pageRow_records}";
 //以加上限制顯示筆數的ＳＱＬ敘述句查詢資料到 $RecBoard 中
 $RecBoard = $db_link->query($query_limit_RecBoard);
 //以未加上限制顯示筆數的ＳＱＬ敘述句查詢資料到 $all_RecBoard 中
@@ -70,11 +70,12 @@ $total_pages = ceil($total_records/$pageRow_records);
 </head>
 
 <body>
-  <h1>網路留言版</h1>
+  <h1>網路留言版管理介面</h1>
+  <p>歡迎 <?php echo $_SESSION["loginMember"] ?></p>
   <p>資料筆數：<?php echo $total_records ?>
   </p>
   <p><a href="?logout=true">登出</a></p>
-  <?php while ($row_RecBoard=$result->fetch_assoc()) { ?>
+  <?php while ($row_RecBoard=$RecBoard->fetch_assoc()) { ?>
   <table>
     <tr>
       <th>id</th>
@@ -114,8 +115,8 @@ $total_pages = ceil($total_records/$pageRow_records);
   <table>
     <tr>
       <?php if ($num_pages > 1) { ?>
-      <td><a href="index.php?page=1">第一頁</a></td>
-      <td><a href="index.php?page=<?php echo $num_pages-1 ?>">上一頁</a>
+      <td><a href="admin.php?page=1">第一頁</a></td>
+      <td><a href="admin.php?page=<?php echo $num_pages-1 ?>">上一頁</a>
       </td>
       <?php } ?>
       <?php
@@ -123,15 +124,15 @@ $total_pages = ceil($total_records/$pageRow_records);
             if ($i==$num_pages) {
                 echo "<td>$i</td>";
             } else {
-                echo "<td><a href=\"index.php?page={$i}\">{$i}</a>
+                echo "<td><a href=\"admin.php?page={$i}\">{$i}</a>
             </td>";
             }
         }
       ?>
       <?php if ($num_pages < $total_pages) { ?>
-      <td><a href="index.php?page=<?php echo $num_pages+1 ?>">下一頁</a>
+      <td><a href="admin.php?page=<?php echo $num_pages+1 ?>">下一頁</a>
       </td>
-      <td><a href="index.php?page=<?php echo $total_pages;?>">最後頁</a>
+      <td><a href="admin.php?page=<?php echo $total_pages;?>">最後頁</a>
       </td>
       <?php } ?>
     </tr>

@@ -10,9 +10,11 @@ if (!isset($_SESSION["loginMember"]) || ($_SESSION["loginMember"] == "")) {
         $passwd = $row_result["passwd"];
         $db_link->close();
         if (($username == $_POST["username"]) && ($passwd == $_POST["passwd"])) {
+          echo "test3";
             $_SESSION["loginMember"] = $username;
             header("Location: http://localhost/board/admin.php");
         } else {
+          echo "test4";
             header("Location: http://localhost/board/index.php");
         }
     }
@@ -80,7 +82,7 @@ if (!isset($_SESSION["loginMember"]) || ($_SESSION["loginMember"] == "")) {
       <tr>
         <td colspan="2">
           <input type="submit" name="button" value="登入">
-          <input type="reset" name="button2" value="回上一頁" onClick="window.history.bakc();">
+          <input type="button" name="button2" value="回上一頁" onClick="window.history.back();">
         </td>
       </tr>
     </table>
